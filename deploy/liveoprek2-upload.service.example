@@ -1,0 +1,18 @@
+[Unit]
+Description=liveoprek2 resumable import server port 8502
+After=network-online.target
+
+[Service]
+Type=simple
+User=liveoprek
+Group=liveoprek
+WorkingDirectory=/opt/liveoprek2
+Environment=LIVEOPREK_DATA=/var/lib/liveoprek2
+EnvironmentFile=/etc/liveoprek2/env
+ExecStart=/opt/liveoprek2/.venv/bin/python upload_server.py --host 0.0.0.0 --port 8502
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

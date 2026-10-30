@@ -1,0 +1,19 @@
+[Unit]
+Description=liveoprek2 persistent render/import/upload worker
+After=network-online.target
+
+[Service]
+Type=simple
+User=liveoprek
+Group=liveoprek
+WorkingDirectory=/opt/liveoprek2
+Environment=LIVEOPREK_DATA=/var/lib/liveoprek2
+EnvironmentFile=/etc/liveoprek2/env
+ExecStart=/opt/liveoprek2/.venv/bin/python -m studio.worker
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=60
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

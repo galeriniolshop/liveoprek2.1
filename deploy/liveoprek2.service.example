@@ -1,0 +1,23 @@
+[Unit]
+Description=liveoprek2 Studio (children include live supervisors)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=liveoprek
+Group=liveoprek
+WorkingDirectory=/opt/liveoprek2
+Environment=LIVEOPREK_DATA=/var/lib/liveoprek2
+Environment=AUTO_START_WORKER=false
+EnvironmentFile=/etc/liveoprek2/env
+ExecStart=/opt/liveoprek2/.venv/bin/python -m streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=60
+KillMode=control-group
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,34 @@
+x-common: &common
+  build: .
+  restart: unless-stopped
+  env_file: .env
+  environment:
+    LIVEOPREK_DATA: /data
+    AUTO_START_WORKER: "false"
+  volumes:
+    - studio-data:/data
+  init: true
+  stop_grace_period: 45s
+services:
+  studio:
+    <<: *common
+    ports:
+      - "127.0.0.1:8501:8501"
+    command: python -m streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+  worker:
+    <<: *common
+    command: python -m studio.worker
+    healthcheck:
+      disable: true
+  uploader:
+    <<: *common
+    ports:
+      - "127.0.0.1:8502:8502"
+    command: python upload_server.py --host 0.0.0.0 --port 8502
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8502/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  studio-data:

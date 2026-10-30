@@ -1,0 +1,12 @@
+# Ganti nama domain dan alamat email. Jalankan Caddy di host yang sama.
+studio.example.com {
+    reverse_proxy 127.0.0.1:8501
+}
+upload.example.com {
+    request_body {
+        max_size 16MB
+    }
+    reverse_proxy 127.0.0.1:8502
+}
+# Set UPLOAD_PUBLIC_URL=https://upload.example.com di Secrets/.env.
+# Jangan mem-proxy port 8502 melalui path pada domain Streamlit tanpa menguji WebSocket dan Origin.
